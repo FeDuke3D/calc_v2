@@ -1,0 +1,38 @@
+\input texinfo
+@settitle SmartCalc_v2 Manual
+
+@copying
+This manual is for SmartCalc_v2 project
+Copyright @copyright{} 2022 irobin@@student.21-school.ru
+@end copying
+
+@titlepage
+@title SmartCalc_v2 Manual
+@author by irobin
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+This here is a calculator.
+@*
+It is able to calculate arbitrary bracketed arithmetic expressions in infix notation with substitution of the value of the variable x as a number and drawing graph of input function.
+
+@itemize @bullet
+@item
+Use buttons or keyboard for input.
+@item
+Press '=' button to perform calculation.
+@item
+Press 'CA' button to erase the result, the input and the graph.
+@item
+If there is an 'x' symbol in input, the application will display a graph in the drawing area to the left. It's domain and codomain are adjustable via input fields under the drawing area.
+@item
+Input value of x in the field marked 'x =' and the result of substitution will be shown in the answer field. Also, if the result fits into domain and codomain of the graph, it will be marked by red cross on drawing area.
+@item
+Calculator supports such math functions as cosine('cos'), sine('sin'), tangent('tan'), arc cosine('acos'), arc sine('asin'), arc tangent('atan'), square root('sqrt'), natural logarithm('ln'), common logarithm('log'), power('^') and modulus('mod').
+@item
+Calculator is able to process omited multiplication signs and unary plus and minus.
+@end itemize
+
+@bye
