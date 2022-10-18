@@ -1,16 +1,48 @@
 CC = g++ -std=c++17
 CFLAGS = -Wall -Wextra -Werror -Wshadow
 LFLAGS = -lgtest
+BD = build
 
 OS = $(shell uname -s)
 ifeq ($(OS), Linux)
 	LFLAGS += -pthread -lsubunit
+	OPEN = -xdg-open
+else
+	OPEN = -open
 endif
 
 TITLE = SmartCalc_v2
 TEXI2DVI = texi2dvi
+PROFILE = smart_calc_v2.pro
 
-all: test dist install dvi
+SOURCES =\
+	calc_core.cpp\
+	main.cpp\
+	mainwindow.cpp\
+	test.cpp
+
+HEADERS =\
+	calc_core.h\
+	controller.h\
+	mainwindow.h
+
+UIFILES = mainwindow.ui
+
+QCPFILES =\
+	third_party/qcustomplot.cpp\
+	third_party/qcustomplot.h
+
+all: test $(BD)
+
+$(BD) : replication
+	cd $(BD); qmake $(PROFILE)
+	make -C $(BD)/
+	cd $(BD); $(RM) -rf *.cpp *.h *.ui *.o *.pro* Makefile third_party
+
+replication :
+	-mkdir $(BD) $(BD)/third_party
+	cp $(PROFILE) $(SOURCES) $(HEADERS) $(UIFILES) $(BD)
+	cp -r third_party $(BD)
 
 install : qMakefile
 	$(MAKE) -f qMakefile INSTALL_ROOT="~" install
@@ -18,16 +50,16 @@ install : qMakefile
 uninstall : qMakefile
 	$(MAKE) -f qMakefile INSTALL_ROOT="~" uninstall
 
-# dist : qMakefile
-# 	$(MAKE) -f qMakefile DISTNAME="smart_calc_v2" DISTDIR=".tmp/smart_calc_v2" dist
+dist :
+	-mkdir $(TITLE) $(TITLE)/third_party
+	cp -r $(PROFILE) $(SOURCES) $(HEADERS) $(UIFILES) *.texi third_party $(TITLE)
+	tar -cvzf ./dist_calc_v2.tgz $(TITLE)/
+	$(RM) -rf $(TITLE)
 
 dvi : $(TITLE).dvi
 
 $(TITLE).dvi : $(TITLE).texi
 	$(TEXI2DVI) ./$(TITLE).texi
-
-build: qMakefile
-	$(MAKE) -f qMakefile CXX="g++ -std=c++17"
 
 tests : test
 
@@ -78,8 +110,7 @@ mem2 : test
 	grep ERROR valgrind-out.txt
 
 clean: report_clean qMakefile
-	$(RM) -rf *.o *.out smart_calc_v2 .tmp *.dvi *.log *.txt
-	$(MAKE) -f qMakefile clean
+	$(RM) -rf *.o *.out *.tmp *.dvi *.log *.txt $(BD) *tgz
 	$(RM) -rf qMakefile .qmake.stash
 
 rebuild :
